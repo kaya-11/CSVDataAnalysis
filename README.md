@@ -11,14 +11,10 @@ A Python script to analyze CSV data by converting text responses to numerical va
 - Calculate statistics (mean, median, mode, standard deviation).
 - Debug mode for extra output.
 
----
-
 ## Requirements
 
 - Python 3.x
 - No additional libraries required (uses built-in modules: `csv`, `statistics`, `json`, `argparse`, `os`).
-
----
 
 ## Usage
 
@@ -26,47 +22,42 @@ A Python script to analyze CSV data by converting text responses to numerical va
 python3 csv_analysis.py --csv_file <path_to_csv> --column <column_name_or_index> --column_type <column_type>
 ```
 
+---
+
 ## Specifying the Column to Analyze
 You can identify the column you want to analyze in one of two ways:
 
 
-By Column Name
+### By Column Name
 Provide the exact name of the column as it appears in your CSV file.
-Example: --column P1F1
+Example: --column MyColumn
 
-
-By Column Index (1-based)
+### By Column Index (1-based)
 Provide the index of the column, starting from 1 (not 0).
 Example: --column 3 refers to the third column in the CSV file.
 
+### Example Usage
 
-Example Usage
-
-To analyze the column named P1F1:
-bash
-Kopieren
-
-python3 app.py --csv_file data.csv --column P1F1 --column_type Probability
-
+To analyze the column named MyColumn:
+```bash
+python3 csv_analysis.py --csv_file data.csv --column MyColumn --column_type Probability
+```
 
 To analyze the third column (index 3):
-bash
-Kopieren
+```bash
+python3 csv_analysis.py --csv_file data.csv --column 3 --column_type Probability
+```
 
-python3 app.py --csv_file data.csv --column 3 --column_type Probability
-
-
-
-Notes
+### Notes
 
 If you use an index, ensure it is within the valid range of columns in your CSV file.
 If you use a name, ensure it matches the column name exactly (including case and special characters).
 
+---
+
 ## Configuration Guide
 
 The script uses a **JSON configuration file** to map text responses (e.g., survey answers) to numerical values for statistical analysis. This guide explains the structure and usage of the config file.
-
----
 
 ### Config File Structure
 
@@ -128,9 +119,7 @@ Description: Maps text responses (keys) to numerical values (values).
 
 The text "very satisfied" will be converted to the numerical value 5.
 
-
 ### How to Use the Config File
-
 
 Default Location:
 The script looks for the config file at ./config/columns.json by default.
@@ -139,7 +128,6 @@ You can override this path using the --config_file argument:
 ```bash
 python3 app.py --config_file /path/to/your/config.json ...
 ```
-
 
 ### Adding New Column Types:
 To add a new column type (e.g., Frequency), add an entry to the columns array:
@@ -170,4 +158,3 @@ For example, to use a 10-point scale for Satisfaction:
   "very dissatisfied": 0
 }
 ```
-

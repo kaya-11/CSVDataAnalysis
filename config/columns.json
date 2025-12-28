@@ -1,0 +1,25 @@
+{
+  "columns": [
+    {
+      "name": "Satisfaction",
+      "mapping": {
+        "very satisfied": 5,
+        "satisfied": 4,
+        "neutral": 3,
+        "dissatisfied": 2,
+        "very dissatisfied": 1
+      }
+    },
+    {
+      "name": "Probability",
+      "mapping": {
+        "very likely": 5,
+        "likely": 4,
+        "neutral": 3,
+        "unlikely": 2,
+        "very unlikely": 1
+      }
+    }
+  ]
+}
+

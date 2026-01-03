@@ -32,9 +32,9 @@ You can identify the column you want to analyze in one of two ways:
 Provide the exact name of the column as it appears in your CSV file.
 Example: --column MyColumn
 
-### By Column Index (1-based)
-Provide the index of the column, starting from 1 (not 0).
-Example: --column 3 refers to the third column in the CSV file.
+### By Column Index 
+Provide the index of the column, starting from 0.
+Example: --column 2 refers to the third column in the CSV file.
 
 ### Example Usage
 

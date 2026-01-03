@@ -4,7 +4,9 @@ import json
 import argparse
 import os
 
-DEBUG = False
+class Config:
+    DEBUG = False
+    
 CONFIG_FILE = "./config/columns.json"
 
 def load_config(config_path):
@@ -13,7 +15,7 @@ def load_config(config_path):
             config = json.load(file)
         return config
     else:
-        print(f"Config file ${config_path} not found")
+        print(f"[ERROR] Config file ${config_path} not found")
         exit(1)
 
 def load_csv_data(file_path):
@@ -21,8 +23,8 @@ def load_csv_data(file_path):
         with open(file_path, mode='r', encoding='utf-8') as file:
             reader = csv.DictReader(file, delimiter=';')
             data = [row for row in reader]
-            if DEBUG:
-                print(f"{len(data)} rows loaded from {file_path}")
+            if Config.DEBUG:
+                print(f"[DEBUG] {len(data)} rows loaded from {file_path}")
 
         cleaned_data = []
         for row in data:
@@ -31,7 +33,7 @@ def load_csv_data(file_path):
 
         return cleaned_data
     else:
-        print(f"CSV file ${file_path} not found")
+        print(f"[ERROR] CSV file ${file_path} not found")
         exit(1)
 
 def get_column_name(data, column_identifier):
@@ -40,7 +42,7 @@ def get_column_name(data, column_identifier):
         if index < len(data[0].keys()):
             return list(data[0].keys())[index]
         else:
-            print(f"Index {index} is out of range.")
+            print(f"[ERROR] Index {index} is out of range.")
             exit(1)
     except ValueError:
         return column_identifier
@@ -51,12 +53,16 @@ def convert_to_numerical(data, column_name, mapping):
     for row in data:
         text_response = row.get(column_name, '')
         text_responses.append(text_response)
-        numerical_data.append(mapping.get(text_response, 0))
+        numeric_value = mapping.get(text_response, 0)
+        if (numeric_value > 0):
+            numerical_data.append(numeric_value)
+        else:
+            print(f"[WARNING] No valid text response foung for {column_name} in row {row}")
 
     sorted_numbers = sorted(numerical_data, reverse=True)
-    if DEBUG:
-        print(f"Data as text: {text_responses}")
-        print(f"Numerical data: {numerical_data}")
+    if Config.DEBUG:
+            print(f"[DEBUG] Data as text: {text_responses}")
+            print(f"[DEBUG] Numerical data: {numerical_data}")
     print(f"Sorted data: {sorted_numbers}")
 
     return numerical_data
@@ -75,21 +81,23 @@ def calculate_statistics(numerical_data):
 
 def main():
     parser = argparse.ArgumentParser(description='Analysis of csv data.')
-    parser.add_argument('--csv_file', required=True, type=str, help='Path to CSV file')
+    parser.add_argument('-f', '--file', required=True, type=str, help='Path to CSV file')
     parser.add_argument(
-        "--config_file",
+        "-cf", "--config_file",
         type=str,
         default=CONFIG_FILE,
         help=f"Path to the config JSON file (default: ${CONFIG_FILE})"
     )
-    parser.add_argument('--column', required=True, type=str, help='Name or index of column to analyze')
-    parser.add_argument('--column_type', required=True, type=str, help='Type of columns for data analysis')
-    parser.add_argument('--debug', action='store_true', help='Prints extra debugging information')
+    parser.add_argument('-c', '--column', required=True, type=str, help='Name or index of column to analyze')
+    parser.add_argument('-ct', '--column_type', required=True, type=str, help='Type of columns for data analysis')
+    parser.add_argument('-d', '--debug', action='store_true', help='Prints extra debugging information')
     args = parser.parse_args()
 
-    DEBUG = args.debug
+    Config.DEBUG = args.debug
+    if Config.DEBUG:
+        print("[DEBUG] Debug mode enabled")
 
-    data = load_csv_data(args.csv_file)
+    data = load_csv_data(args.file)
 
     column_name = get_column_name(data, args.column)
     if not column_name:
